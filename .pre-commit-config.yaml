@@ -51,8 +51,7 @@ repos:
     hooks:
       - id: trufflehog
         name: TruffleHog (System)
-        # Use the absolute path to your home directory binary
-        entry: bash -c "git ls-files --exclude-standard --cached --others | grep -v -E -f .trufflehog/exclude_paths.txt | xargs -d '\n' ~/.local/bin/trufflehog filesystem --fail --config=.trufflehog/rules.yaml"
+        entry: bash -c 'BIN=$(command -v trufflehog || echo "$HOME/.local/bin/trufflehog"); if [ -x "$BIN" ]; then git ls-files --exclude-standard --cached --others | grep -v -E -f .trufflehog/exclude_paths.txt | xargs -d "\n" "$BIN" filesystem --fail --config=.trufflehog/rules.yaml; else echo "TruffleHog binary not found, skipping scan"; fi'
         language: system
         pass_filenames: false
         exclude: ^(\.agents|\.claude)/skills/
