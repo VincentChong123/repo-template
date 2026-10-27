@@ -41,5 +41,15 @@ jobs:
         with:
           enable-cache: true
 
+      - name: Sync dependencies for Pyright
+        run: |
+          if [ -f apps/ai_service/pyproject.toml ]; then
+            uv python install 3.12
+            uv sync --project apps/ai_service --all-groups
+          elif [ -f pyproject.toml ]; then
+            uv python install 3.12
+            uv sync --all-groups
+          fi
+
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.1
